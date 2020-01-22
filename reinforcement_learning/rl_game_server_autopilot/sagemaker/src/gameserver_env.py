@@ -41,21 +41,11 @@ class GameServerEnv(gym.Env):
         self.current_min = 0
         self.demand_observation = np.array([self.min_servers]*self.history_len)
         self.alloc_observation = np.array([self.min_servers]*self.history_len)
-<<<<<<< HEAD
-        #self.action_observation = np.array([self.min_servers]*self.history_len)
         
         print ('self.demand_observation '+str(self.demand_observation))
-        #print ('self.alloc_observation '+str(self.alloc_observation))
-        #return np.concatenate((self.demand_observation, self.alloc_observation,self.action_observation))
         return np.concatenate((self.demand_observation, self.alloc_observation)).tolist()
-        return self.demand_observation
-=======
-        
-        print ('self.demand_observation '+str(self.demand_observation))
-        print ('self.alloc_observation '+str(self.alloc_observation))
-        return np.concatenate((self.demand_observation, self.alloc_observation))
->>>>>>> 468cf1d2fa40fcf695df54beaed3e0f13e1bf332
-
+        #to delete
+        #return self.demand_observation
    
 
     def step(self, action):
@@ -91,13 +81,8 @@ class GameServerEnv(gym.Env):
         self.curr_demand = np.clip(self.curr_demand, self.min_servers, self.max_servers)
         print('self.curr_demand={}'.format(self.curr_demand)) 
 
-<<<<<<< HEAD
-        #self.curr_alloc = self.alloc_observation[0]
         self.curr_alloc = self.demand_observation[0]
-=======
-        #time-horizon - use the oldest observation for current allocation
-        self.curr_alloc = self.alloc_observation[0]
->>>>>>> 468cf1d2fa40fcf695df54beaed3e0f13e1bf332
+
         print('self.curr_alloc={}'.format(self.curr_alloc)) 
             
         # Assumes it takes history_len time steps to create or delete 
@@ -117,17 +102,11 @@ class GameServerEnv(gym.Env):
         print('self.alloc_observation={}'.format(self.alloc_observation))
  
         
-        #reward calculation - in case of over provision just 1-ratio. under provision is more severe so 500% more negative reward
+        #reward calculation - in case of over provision just 1-ratio. under provision is more severe so 500% more for negative reward
         print('calculate the reward, calculate the ratio between allocation and demand, we use the first allocation in the series of history of five, first_alloc/curr_demand')
-<<<<<<< HEAD
-        #print('history of previous predictions made by the model ={}'.format(self.alloc_observation))
         
         ratio=self.curr_action/self.curr_demand
-=======
-        print('history of previous predictions made by the model ={}'.format(self.alloc_observation))
-        
-        ratio=self.curr_alloc/self.curr_demand
->>>>>>> 468cf1d2fa40fcf695df54beaed3e0f13e1bf332
+
         print('ratio={}'.format(ratio))
         if (ratio>1):
            #reward=1-ratio
@@ -145,21 +124,17 @@ class GameServerEnv(gym.Env):
         print('reward={}'.format(reward))
                 
          
-        #Instrumnet the supply and demand in cloudwatch
+        #Instrumnet the allocation and demand in cloudwatch
         print('populating cloudwatch - self.curr_demand={}'.format(self.curr_demand))
         self.populate_cloudwatch_metric(self.namespace,self.curr_demand,'curr_demand')
         print('populating cloudwatch - self.curr_alloc={}'.format(self.curr_action))
         self.populate_cloudwatch_metric(self.namespace,self.curr_action,'curr_alloc')
         print('populating cloudwatch - reward={}'.format(reward))
         self.populate_cloudwatch_metric(self.namespace,reward,'reward')
-<<<<<<< HEAD
         print('populating cloudwatch - num_steps={}'.format(self.num_steps))
         self.populate_cloudwatch_metric(self.namespace,self.num_steps,'num_steps')
         print('populating cloudwatch - total_num_of_obs={}'.format(self.total_num_of_obs))
         self.populate_cloudwatch_metric(self.namespace,self.total_num_of_obs,'total_num_of_obs')
-
-=======
->>>>>>> 468cf1d2fa40fcf695df54beaed3e0f13e1bf332
         
         if (self.num_steps >= self.max_num_steps):
           done = True
@@ -173,13 +148,7 @@ class GameServerEnv(gym.Env):
         
         extra_info = {}
         #the next state includes the demand and allocation history. 
-<<<<<<< HEAD
-        #next_state=np.concatenate((self.demand_observation,self.alloc_observation,self.action_observation))
         next_state=np.concatenate((self.demand_observation,self.alloc_observation)).tolist()
-        #next_state=self.demand_observation
-=======
-        next_state=np.concatenate((self.demand_observation,self.alloc_observation))
->>>>>>> 468cf1d2fa40fcf695df54beaed3e0f13e1bf332
         print ('next_state={}'.format(next_state))
         return next_state, reward, done, extra_info
 
@@ -212,3 +181,7 @@ class GameServerEnv(gym.Env):
         sine=max_servers*np.sin(current_point)
         print('sine({})={}'.format(current_point,sine))
         return {"Prediction":{"num_of_gameservers": sine}}
+
+
+
+
