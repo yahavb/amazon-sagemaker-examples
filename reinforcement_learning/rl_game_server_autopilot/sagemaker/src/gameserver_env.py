@@ -84,12 +84,6 @@ class GameServerEnv(gym.Env):
         self.curr_alloc = self.demand_observation[0]
 
         print('self.curr_alloc={}'.format(self.curr_alloc)) 
-            
-        # Assumes it takes history_len time steps to create or delete 
-        # the game server from allocation
-        # self.action_observation = self.action_observation[1:]
-        # self.action_observation = np.append(self.action_observation, self.curr_action)
-        # print('self.action_observation={}'.format(self.action_observation))
         
         # store the current demand in the history array demand_observation
         self.demand_observation = self.demand_observation[1:] # shift the observation by one to remove one history point
